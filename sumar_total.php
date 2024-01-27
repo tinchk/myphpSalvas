@@ -28,7 +28,6 @@ $aProductos[] = array(
     "precio" => 45000
 );
 
-
 ?>
 
 <!DOCTYPE html>
@@ -45,7 +44,7 @@ $aProductos[] = array(
     <main class="container">
         <div class="row">
             <div class="col-12 text-center pt-5">
-                <h1>Listado de productos</h1>
+                <h1>Suma total</h1>
             </div>
         </div>
         <div class="row">
@@ -63,11 +62,11 @@ $aProductos[] = array(
                     </thead>
                     <tbody>
                            <?php // otra forma de harlo con el operador While ?>
-                    
-                          
-                           <?php $contador=0 ?>
-                           <?php while($contador < 3) {  ?>
-                                                                   
+                          <?php $contador = 0; ?>
+                          <?php $subtotal = +$aProductos[$contador]["precio"]; ?>
+                          <?php for($contador=0; $contador < count($aProductos); $contador++); { ?> 
+                           
+                                                     
                            <tr>    
                             <td><?php echo $aProductos[$contador]["nombre"]; ?></td>
                             <td><?php echo $aProductos[$contador]["marca"]; ?></td>
@@ -76,11 +75,11 @@ $aProductos[] = array(
                             <td><?php echo $aProductos[$contador]["precio"]; ?></td>
                             <td><button type="button" class="btn btn-primary">COMPRA</button></td>
                          </tr>
-                                 
-                           <?php    
-                           $contador++;  
-                               } ?> 
-                      </tbody>
+                            
+                                              
+                             <?php echo $subtotal; } ?>
+                    
+                    </tbody>
                 </table>
             </div>
         </div>
