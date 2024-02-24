@@ -61,11 +61,10 @@ $aProductos[] = array(
                         </tr>
                     </thead>
                     <tbody>
-                           <?php // otra forma de harlo con el operador While ?>
-                          <?php $contador = 0; ?>
-                          <?php $subtotal = +$aProductos[$contador]["precio"]; ?>
-                          <?php for($contador=0; $contador < count($aProductos); $contador++); { ?> 
-                           
+                           <?php // otra forma de hacerlo con el operador While ?>
+                           <?php $subtotal=0 ?>
+                          <?php for($contador=0; $contador < count($aProductos); $contador++) { ?> 
+                           <?php $subtotal += $aProductos[$contador]["precio"]; ?>
                                                      
                            <tr>    
                             <td><?php echo $aProductos[$contador]["nombre"]; ?></td>
