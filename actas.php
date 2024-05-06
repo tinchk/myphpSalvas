@@ -36,7 +36,7 @@ $contador = 0;
     <main class="container">
         <div class="row">
             <div class="col-12">
-                <table class="table table-hover border">
+                <table class="table table-hover dark border">
                     <thead>
                         <tr>
                             <th>Alumno</th>
