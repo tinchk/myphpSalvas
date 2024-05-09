@@ -5,14 +5,13 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 //Preguntar si existe el archivo, 
-if(file_exists("archivo.txt")) {
-    
+if (file_exists("archivo.txt")) {
+
     //Luego leerlo y almacenarlo en un jsonClientes
     $jsonClientes = file_get_contents("archivo.txt");
 
     //Después convertir el jsonClientes en un array aClientes
-    $aClientes = json_decode($jsonClientes, true); 
-
+    $aClientes = json_decode($jsonClientes, true);
 }
 
 //Y si en caso de No existir archivo, inicializar el aClientes como array vacío (para que el foreach al recorrer no devuelva error)
@@ -29,8 +28,10 @@ if ($_POST) {
     $correo = $_POST["txtCorreo"];
     $imagen = "";
 
-    if ($pos == 0) {
-        //Actualizo el Cliente
+$pos = isset($_GET["pos"]) && $_GET["pos"] >= 0 ? $_GET["pos"] : "";
+
+    if ($pos >= 0) {
+        //Actualizo el Cliente a editar
         $aClientes[$pos] = [
             "nombre" => $nombre,
             "dni" => $dni,
@@ -47,7 +48,7 @@ if ($_POST) {
             move_uploaded_file($archivo_tmp, "imagenes/$nombreImagen");
         }
 
-        //Inserto la imagen  
+        //Inserto el cliente modificado
         $aClientes[] = [
             "nombre" => $nombre,
             "dni" => $dni,
@@ -63,23 +64,18 @@ if ($_POST) {
 
     //Almacenar ahora el json string en Archivo.txt
     file_put_contents("archivo.txt", $jsonClientes);
- 
-}
-  
 
 
-
-
-
-
-
-$pos = isset($_GET["pos"]) && $_GET["pos"] >= 0 ? $_GET["pos"] : "";
- 
 if (isset($_GET["accion"]) && $_GET["accion"] == "eliminar") {
     unset($aClientes["pos"]);
 }
+    //Convertir a json el array $aClientes  
+    $jsonClientes = json_encode($aClientes);
 
- 
+    //Almacenar ahora el json string en Archivo.txt
+    file_put_contents("archivo.txt", $jsonClientes);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -143,13 +139,12 @@ if (isset($_GET["accion"]) && $_GET["accion"] == "eliminar") {
                     </head>
 
                     <body>
-                        <?php  // * Modifico el Foreach p/ aplicar los (Botones interactivos)/Acciones de editar y eliminar 
+                        <?php // * Modifico el Foreach p/ aplicar los (Botones interactivos)/Acciones de editar y eliminar 
                         // * Cambio la forma de la sintaxis del Foreach para que se adapte a lo que preciso hacer.
                         // Usando la sintaxis de clave => valor 
+                        // * foreach($aClientes as $cliente) / va a pasar a ser foreach($aClientes as $clave => $valor) 
                         ?>
 
-                        <?php // foreach($aClientes as $cliente) / va a pasar a ser foreach($aClientes as $clave => $valor)
-                        ?>
                         <?php foreach ($aClientes as $pos => $cliente) { ?>
                             <tr>
                                 <td><?php  ?></td>
