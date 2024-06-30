@@ -22,6 +22,13 @@ else {
     $aClientes = array();
 }
 
+if (isset($_GET["pos"]) && $_GET["pos"] >= 0) {
+
+    $pos = $_GET["pos"]; 
+ } else {
+      $pos = ""; 
+ }
+
 if ($_POST) {
 
     $nombre = $_POST["txtNombre"];
@@ -29,9 +36,9 @@ if ($_POST) {
     $telefono = $_POST["txtTelefono"];
     $correo = $_POST["txtCorreo"];
     
-    if (isset($_GET["editar"]) && $_GET["editar"] >= 0) {
+    if (isset($_GET["pos"]) && $_GET["pos"] >= 0) {
 
-   $pos = $_GET["editar"]; 
+    $pos = $_GET["pos"]; 
 
     if ($_FILES["archivo"]["error"] === UPLOAD_ERR_OK) {
         $nombreAleatorio = date("Ymdhmsi") . rand(1000, 2000); //202210202002371010
@@ -71,6 +78,7 @@ if ($_POST) {
                 }
             }
     
+
             //Inserto uno nuevo
             $aClientes[] = ["dni" => $dni,
                 "nombre" => $nombre,
@@ -86,10 +94,10 @@ if ($_POST) {
         file_put_contents("archivo.txt", $strJson);
     }
     
-    if (isset($_GET["eliminar"]) && $_GET["eliminar"] >= 0) {
+    if (isset($_GET["accion"]) && $_GET["accion"] == "eliminar") {
         //iguale el pos, elimine, converti, almacene y redireccione
     
-        $pos = $_GET["eliminar"];
+        $pos = $_GET["pos"];
     
         //elimina la posicion marcada
         unset($aClientes[$pos]);
@@ -102,9 +110,7 @@ if ($_POST) {
         //redirecciono a la pantalla principal
         header("Location: index.php");
     }
-    
-      
-     
+
 ?>
 
 <!DOCTYPE html>
@@ -119,8 +125,7 @@ if ($_POST) {
 </head>
 
 <body>
-    <main class="container">
-
+    <main class="container-fluid">
         <div class="row">
             <div class="col-12 text-center py-3">
                 <h1>Registro de clientes</h1>
@@ -142,8 +147,8 @@ if ($_POST) {
                     <label for="txtCorreo">Correo</label>
                     <input type="mail" name="txtCorreo" id="txtCorreo" class="form-control" required value="<?php echo isset($aClientes[$pos]["correo"]) ? $aClientes[$pos]["correo"] : ""; ?>">
 
-                    <label for="">Archivo</label>
-                    <input type="file" name="imagen" id="imagen" accept=".jpg, .jpeg, .pgn">
+                    <label for="">Imagen adj</label>
+                    <input type="file" name="archivo" id="archivo" accept=".jpg, .jpeg, .png">
                     <small>Archivos admitidos: .jpg, .jpeg, .png</small>
 
                     <button type="submit" class="btn btn-primary">Guardar</button>
@@ -175,7 +180,7 @@ if ($_POST) {
 
                         <?php foreach ($aClientes as $pos => $cliente) { ?>
                             <tr>
-                                <td><?php  ?></td>
+                                <td><img src="imagenes/<?php echo $cliente["imagen"]; ?>" class="img-fluid" alt="imagen de perfil"> </td>
                                 <td><?php echo $cliente["nombre"]; ?></td>
                                 <td><?php echo $cliente["dni"]; ?></td>
                                 <td><?php echo $cliente["telefono"]; ?></td>
