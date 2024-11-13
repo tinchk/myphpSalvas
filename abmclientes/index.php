@@ -87,11 +87,11 @@ if ($_POST) {
                 "imagen" => $nombreImagen,
                          ];
         
-        //Convertir el array $aClientes a json $strJson
-        $strJson = json_encode($aClientes);
+        //Convertir el array $aClientes a un jsonClientes
+        $jsonClientes = json_encode($aClientes);
          }
-        //Almacenar $strJson en archivo.txt
-        file_put_contents("archivo.txt", $strJson);
+        //Almacenar el $jsonClientes en un archivo.txt
+        file_put_contents("archivo.txt", $jsonClientes);
     }
     
     if (isset($_GET["accion"]) && $_GET["accion"] == "eliminar") {
@@ -103,10 +103,10 @@ if ($_POST) {
         unset($aClientes[$pos]);
     
         //Convertir el array de clientes en json
-        $strJson = json_encode($aClientes);
+        $jsonClientes = json_encode($aClientes);
     
         //Almacenar el json en el archivo.txt
-        file_put_contents("archivo.txt", $strJson);
+        file_put_contents("archivo.txt", $jsonClientes);
         //redirecciono a la pantalla principal
         header("Location: index.php");
     }

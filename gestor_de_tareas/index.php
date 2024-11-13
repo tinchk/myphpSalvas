@@ -4,11 +4,11 @@ ini_set('diplay_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+// el archivo va a existir cuando se carguen los datos
 if (file_exists("archivo.txt")) {
-
-   $strjson = file_get_contents("archivo.txt");  
-   $aTareas = json_decode($strjson, true);
-
+    // Ahora voy a decodificar (transformar) ese archivo de texto en un array
+    $strjson = file_get_contents("archivo.txt");
+    $aTareas = json_decode($strjson, true);
 } else {
 
     $aTareas = array();
@@ -17,32 +17,48 @@ if (file_exists("archivo.txt")) {
 $id = isset($_GET["id"]) && $_GET["id"] >= 0 ? $_GET["id"] : "";
 
 if ($_POST) {
-    
+
     // defino lss valores para el post del formulario (lo que se va a enviar) 
 
-     $prioridad = $_POST["lstprioridad"];
-     $usuario = $_POST["lstusuario"];
-     $estado = $_POST["lstestado"];
-     $descripcion = $_POST["txtdescripcion"];
-     $titulo = $_POST["txttitulo"];
-   
+    $prioridad = $_POST["lstprioridad"];
+    $usuario = $_POST["lstusuario"];
+    $estado = $_POST["lstestado"];
+    $descripcion = $_POST["txtdescripcion"];
+    $titulo = $_POST["txttitulo"];
+
     //Si viene una nueva tarea o si se Actualizan los datos
-     
+
+    // En este caso se actualizan datos ya existentes;
     if ($id >= 0) {
-        
-        $aTareas[$id] = [ $fecha => $id [date("dd/mm/yy")],
-                          $prioridad => "lstprioridad",
-                          $usuario => "lstusuario",   
-                          $estado => "lstestado",
-                          $titulo => "txttitulo",
-                                    ];
-    
-       };
-              
-         json_encode($strjson,$Tareas);
 
+        $aTareas[$id] = [
+            $fecha => $aTareas[$id]["fecha"],
+            "prioridad" => $prioridad,
+            "usuario" => $usuario,
+            "estado" => $estado,
+            "descripcion" => $descripcion,
+            "titulo" => $titulo
+        ];
+    }
 
- }; 
+    // Cuando se genera una nueva tarea;
+
+    else {
+        $aTareas[] = [
+            "fecha" => date("d/m/yy"),
+            "prioridad" => $prioridad,
+            "usuario" => $usuario,
+            "estado" => $estado,
+            "descripcion" => $descripcion,
+            "titulo" => $titulo
+        ];
+    }
+    // Aquí lo regreso a texto del array ($) aTareas
+    $strjson = json_encode($aTareas);
+    $jsonTareas = file_put_contents("archivo.txt", $strjson);
+
+};
+
 
 
 
@@ -67,7 +83,7 @@ if ($_POST) {
                 <h1>Gestor de tareas</h1>
             </div>
         </div>
-        
+
         <form action="" method="post">
             <div class="row">
                 <div class="col-4">
@@ -96,7 +112,7 @@ if ($_POST) {
                         <option value="4">Terminado</option>
                     </select>
                 </div>
-            
+
             </div>
             <div class="row">
                 <div class="col-12">
@@ -105,24 +121,24 @@ if ($_POST) {
                 </div>
             </div>
 
-          <div class="row">
-            <div class="col-12">
-                <label for="txtdescripcion" class="form-label">Descripcion</label>
-                <input type="text" name="txtdescripcion" id="txtdescripcion" class="form-control">
-            </div>
+            <div class="row">
+                <div class="col-12">
+                    <label for="txtdescripcion" class="form-label">Descripcion</label>
+                    <input type="text" name="txtdescripcion" id="txtdescripcion" class="form-control">
+                </div>
 
 
-            <div class="pt-3 text-center">
-                <button type="submit" class="btn btn-primary">ENVIAR</button>
-                <button type="" class="btn btn-secondary">CANCELAR</button>
+                <div class="pt-3 text-center">
+                    <button type="submit" class="btn btn-primary">ENVIAR</button>
+                    <button type="" class="btn btn-secondary">CANCELAR</button>
+                </div>
+
             </div>
-           
-           </div>
         </form>
 
         <div class="row">
             <div class="col-12">
-                <table class="table-hover border">
+                <table class="table table-hover border">
 
                     <head>
                         <tr>
@@ -136,20 +152,23 @@ if ($_POST) {
                     </head>
 
                     <body>
-                            <?php // Aplico el foreach para mostrar los valores del recuadro ?>
-                          
-                    <?php foreach($aTareas as $tarea) { ?>
-                    
-                <tr>                                                    
-                    <td><?php echo $tarea["txttitulo"]; ?></td>
-                    <td><?php echo $tarea["lstprioridad"]; ?></td>
-                    <td><?php echo $tarea["lstusuario"]; ?></td>
-                    <td><?php echo $tarea["lstestado"]; ?></td>    
-                </tr> 
-                    
-                    <?php }; ?>
-                      
-                </body>
+                        <?php // Aplico el foreach para mostrar los valores del recuadro 
+                        ?>
+
+                        <?php foreach ($aTareas as $pos => $tarea) { ?>
+
+                            <tr>
+                                <td><?php echo $pos + 1; ?></td>
+                                <td><?php echo $tarea["fecha"]; ?></td>
+                                <td><?php echo $tarea["titulo"]; ?></td>
+                                <td><?php echo $tarea["prioridad"]; ?></td>
+                                <td><?php echo $tarea["usuario"]; ?></td>
+                                <td><?php echo $tarea["estado"]; ?></td>
+                            </tr>
+
+                        <?php }; ?>
+
+                    </body>
 
                 </table>
             </div>
